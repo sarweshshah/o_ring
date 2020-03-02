@@ -15,7 +15,7 @@ Testing that with Ardiuno can be done using the example code in MPR library in t
 Using i2c communication, we can attach upto 4 MPR sensors with one Arduino chip. This is done using a 12 bit address system which both MPR sensor and Arduinos come programmed with. The underlying architecture is a classic master slave communication. 
 The default address of an MPR sensor is usually **0x5A** (though one must consult the datasheet for that) and can be changed to either **0x5B, 0x5C** or **0x5D** depending on the which pin connects with the **ADD** pin of the sensor.
 
-ADDR not connected: 0x5A
-ADDR tied to 3V: 0x5B
-ADDR tied to SDA: 0x5C
-ADDR tied to SCL: 0x5D
+- ADDR not connected: 0x5A
+- ADDR tied to 3V: 0x5B
+- ADDR tied to SDA: 0x5C
+- ADDR tied to SCL: 0x5D
