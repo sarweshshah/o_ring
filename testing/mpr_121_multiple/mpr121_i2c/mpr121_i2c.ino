@@ -1,25 +1,25 @@
 /*********************************************************
-This is a library for the MPR121 12-channel Capacitive touch sensor
+  This is a library for the MPR121 12-channel Capacitive touch sensor
 
-Designed specifically to work with the MPR121 Breakout in the Adafruit shop 
+  Designed specifically to work with the MPR121 Breakout in the Adafruit shop
   ----> https://www.adafruit.com/products/
 
-These sensors use I2C communicate, at least 2 pins are required 
-to interface
+  These sensors use I2C communicate, at least 2 pins are required
+  to interface
 
-Adafruit invests time and resources providing this open source code, 
-please support Adafruit and open-source hardware by purchasing 
-products from Adafruit!
+  Adafruit invests time and resources providing this open source code,
+  please support Adafruit and open-source hardware by purchasing
+  products from Adafruit!
 
-Written by Limor Fried/Ladyada for Adafruit Industries.  
-BSD license, all text above must be included in any redistribution
+  Written by Limor Fried/Ladyada for Adafruit Industries.
+  BSD license, all text above must be included in any redistribution 
 **********************************************************/
 
 #include <Wire.h>
 #include "Adafruit_MPR121.h"
 
 #ifndef _BV
-#define _BV(bit) (1 << (bit)) 
+#define _BV(bit) (1 << (bit))
 #endif
 
 // You can have up to 4 on one i2c bus but one is enough for testing!
@@ -45,9 +45,9 @@ void setup() {
   while (!Serial) { // needed to keep leonardo/micro from starting too fast!
     delay(100);
   }
-  
-  Serial.println("Adafruit MPR121 Capacitive Touch sensor test"); 
-  
+
+  Serial.println("Adafruit MPR121 Capacitive Touch sensor test");
+
   // Default address is 0x5A, if tied to 3.3V its 0x5B
   // If tied to SDA its 0x5C and if SCL then 0x5D
   if (!capA.begin(0x5A)) {
@@ -69,7 +69,7 @@ void setup() {
     Serial.println("MPR121:D not found, check wiring?");
     while (1);
   }
-  
+
   Serial.println("MPR121s found!");
 }
 
@@ -79,51 +79,51 @@ void loop() {
   currtouchedB = capB.touched();
   currtouchedC = capC.touched();
   currtouchedD = capD.touched();
-  
-  for (uint8_t i=0; i<12; i++) {
+
+  for (uint8_t i = 0; i < 12; i++) {
     // it if *is* touched and *wasnt* touched before, alert!
     if ((currtouchedA & _BV(i)) && !(lasttouchedA & _BV(i)) ) {
-      Serial.print(1 + i); Serial.println(" touched");
+      Serial.print(i); Serial.println(" touched");
     }
     // if it *was* touched and now *isnt*, alert!
     if (!(currtouchedA & _BV(i)) && (lasttouchedA & _BV(i)) ) {
-      Serial.print(1 + i); Serial.println(" released");
+      Serial.print(i); Serial.println(" released");
     }
   }
 
-  for (uint8_t i=0; i<12; i++) {
+  for (uint8_t i = 0; i < 12; i++) {
     // it if *is* touched and *wasnt* touched before, alert!
     if ((currtouchedB & _BV(i)) && !(lasttouchedB & _BV(i)) ) {
-      Serial.print(1 + 12 + i); Serial.println(" touched");
+      Serial.print(12 + i); Serial.println(" touched");
     }
     // if it *was* touched and now *isnt*, alert!
     if (!(currtouchedB & _BV(i)) && (lasttouchedB & _BV(i)) ) {
-      Serial.print(1 + 12 + i); Serial.println(" released");
+      Serial.print(12 + i); Serial.println(" released");
     }
   }
 
-  for (uint8_t i=0; i<12; i++) {
+  for (uint8_t i = 0; i < 12; i++) {
     // it if *is* touched and *wasnt* touched before, alert!
     if ((currtouchedC & _BV(i)) && !(lasttouchedC & _BV(i)) ) {
-      Serial.print(1 + 24 + i); Serial.println(" touched");
+      Serial.print(24 + i); Serial.println(" touched");
     }
     // if it *was* touched and now *isnt*, alert!
     if (!(currtouchedC & _BV(i)) && (lasttouchedC & _BV(i)) ) {
-      Serial.print(1 + 24 + i); Serial.println(" released");
+      Serial.print(24 + i); Serial.println(" released");
     }
   }
 
-  for (uint8_t i=0; i<12; i++) {
+  for (uint8_t i = 0; i < 12; i++) {
     // it if *is* touched and *wasnt* touched before, alert!
     if ((currtouchedD & _BV(i)) && !(lasttouchedD & _BV(i)) ) {
-      Serial.print(1 + 36 + i); Serial.println(" touched");
+      Serial.print(36 + i); Serial.println(" touched");
     }
     // if it *was* touched and now *isnt*, alert!
     if (!(currtouchedD & _BV(i)) && (lasttouchedD & _BV(i)) ) {
-      Serial.print(1 + 36 + i); Serial.println(" released");
+      Serial.print(36 + i); Serial.println(" released");
     }
   }
-  
+
   lasttouchedA = currtouchedA;
   lasttouchedB = currtouchedB;
   lasttouchedC = currtouchedC;
