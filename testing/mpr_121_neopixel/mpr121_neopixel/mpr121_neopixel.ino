@@ -95,6 +95,7 @@ void loop() {
 
   updateTouched();
   updateReleased();
+  printTouchArrayLn();
 
   //strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(0, 0, 0)));
 
