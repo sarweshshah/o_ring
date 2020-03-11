@@ -12,6 +12,10 @@ bool MPR_121::checkInterrupt() {
 }
 
 MPR_121::MPR_121(int _address) {
+  Serial.print("MPR121 with address ");
+  Serial.print(_address);
+  Serial.println(" initiated");
+  
   this->address = _address;
   set_register(this->address, ELE_CFG, 0x00);
 
