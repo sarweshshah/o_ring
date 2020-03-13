@@ -56,7 +56,6 @@ void setup() {
 
   strip = Adafruit_NeoPixel(NEOPIXEL_COUNT, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
   strip.begin();
-  Serial.println("Adafruit Neopixel is on!");
 
   Serial.println("Adafruit MPR121 Capacitive Touch sensor test");
   // Default address is 0x5A, if tied to 3.3V its 0x5B
@@ -79,11 +78,7 @@ void setup() {
   }
   Serial.println("MPR121s found!");
 
-  for (uint8_t i = 0; i < NEOPIXEL_COUNT; i++) {
-    strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(map(i, 0, NEOPIXEL_COUNT,
-                                         map(300, 0, 360, 0, 65535), map(50, 0, 360, 0, 65535)) % 65535,
-                                         255, 255)));
-  }
+  updateNeoPixelLights();
 }
 
 void loop() {
@@ -96,8 +91,6 @@ void loop() {
   updateTouched();
   updateReleased();
   printTouchArrayLn();
-
-  //strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(0, 0, 0)));
 
   while (1) {
     if (strip.canShow()) {
@@ -118,59 +111,63 @@ void updateTouched() {
   for (uint8_t i = 0; i < 12; i++) {
     // it if *is* touched and *wasnt* touched before, alert!
     if ((currtouchedA & _BV(i)) && !(lasttouchedA & _BV(i)) ) {
-      Serial.print(i); Serial.println(" touched");
+      // Serial.print(i); Serial.println(" touched");
       touchArray[i] = true;
     }
   }
   for (uint8_t i = 0; i < 12; i++) {
     // it if *is* touched and *wasnt* touched before, alert!
     if ((currtouchedB & _BV(i)) && !(lasttouchedB & _BV(i)) ) {
-      Serial.print(12 + i); Serial.println(" touched");
+      // Serial.print(12 + i); Serial.println(" touched");
       touchArray[12 + i] = true;
     }
   }
   for (uint8_t i = 0; i < 12; i++) {
     // it if *is* touched and *wasnt* touched before, alert!
     if ((currtouchedC & _BV(i)) && !(lasttouchedC & _BV(i)) ) {
-      Serial.print(24 + i); Serial.println(" touched");
+      // Serial.print(24 + i); Serial.println(" touched");
       touchArray[24 + i] = true;
     }
   }
   for (uint8_t i = 0; i < 12; i++) {
     // it if *is* touched and *wasnt* touched before, alert!
     if ((currtouchedD & _BV(i)) && !(lasttouchedD & _BV(i)) ) {
-      Serial.print(36 + i); Serial.println(" touched");
+      // Serial.print(36 + i); Serial.println(" touched");
       touchArray[36 + i] = true;
     }
   }
+
+  updateNeoPixelLights();
 }
 
 void updateReleased() {
   for (uint8_t i = 0; i < 12; i++) {
     // if it *was* touched and now *isnt*, alert!
     if (!(currtouchedA & _BV(i)) && (lasttouchedA & _BV(i)) ) {
-      Serial.print(i); Serial.println(" released");
+      // Serial.print(i); Serial.println(" released");
       touchArray[i] = false;
     }
 
     // if it *was* touched and now *isnt*, alert!
     if (!(currtouchedB & _BV(i)) && (lasttouchedB & _BV(i)) ) {
-      Serial.print(12 + i); Serial.println(" released");
+      // Serial.print(12 + i); Serial.println(" released");
       touchArray[12 + i] = false;
     }
 
     // if it *was* touched and now *isnt*, alert!
     if (!(currtouchedC & _BV(i)) && (lasttouchedC & _BV(i)) ) {
-      Serial.print(24 + i); Serial.println(" released");
+      // Serial.print(24 + i); Serial.println(" released");
       touchArray[24 + i] = false;
     }
 
     // if it *was* touched and now *isnt*, alert!
     if (!(currtouchedD & _BV(i)) && (lasttouchedD & _BV(i)) ) {
-      Serial.print(36 + i); Serial.println(" released");
+      // Serial.print(36 + i); Serial.println(" released");
       touchArray[36 + i] = false;
     }
   }
+
+  updateNeoPixelLights();
 }
 
 void printTouchArrayLn() {
@@ -179,8 +176,30 @@ void printTouchArrayLn() {
       Serial.print(i);
       Serial.print(" ");
     } else {
-      Serial.print("-1 ");
+      Serial.print(". ");
     }
   }
   Serial.println();
+}
+
+void updateNeoPixelLights() {
+  for (uint8_t i = 0; i < NEOPIXEL_COUNT; i++) {
+    if (touchArray[map(i, 0, NEOPIXEL_COUNT, 0, TOUCHPT_COUNT)]) {
+      //      strip.setPixelColor((i + (NEOPIXEL_COUNT/2)) % NEOPIXEL_COUNT, strip.gamma32(strip.Color(0, 0, 0))); // opposite side blink
+      strip.setPixelColor(i, strip.gamma32(strip.Color(0, 0, 0))); // same side blink
+    } else {
+      strip.setPixelColor(i,
+                          strip.gamma32(
+                            strip.ColorHSV(map(i, 0, NEOPIXEL_COUNT, map(360, 0, 360, 0, 65535), map(0, 0, 360, 0, 65535)) % 65535,
+                                           255, 255)
+                          ));
+    }
+  }
+
+  while (1) {
+    if (strip.canShow()) {
+      strip.show();
+      break;
+    }
+  }
 }
